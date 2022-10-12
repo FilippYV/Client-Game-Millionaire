@@ -16,4 +16,3 @@ def get_path_for_fonts(name_font: str):
 
 def get_path_for_images(name_image: str):
     return os.path.join(get_project_root(), rf"static\images\{name_image}.jpg")
-

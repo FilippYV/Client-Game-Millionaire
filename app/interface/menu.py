@@ -1,5 +1,4 @@
-import time
-from tkinter import Tk, W, E, N, S, Label, Grid, BOTTOM, LEFT, TOP, PhotoImage, Canvas
+from tkinter import Tk, W, E, N, S, Label, Grid, BOTTOM, LEFT, TOP, PhotoImage, Canvas, Text
 from tkinter.ttk import Frame, Button, Entry, Style
 import tkinter.font as tkFont
 from PIL import Image, ImageTk
@@ -39,7 +38,7 @@ class Game:
 
         name_game = Label(self._menu_center, text="Меню", width=15, font=self._leto_text_sans_defect_font_bold_16)
         name_game.grid(row=0, column=0, pady=20)
-        start_button = Button(self._menu_center, text="Играть", width=15)
+        start_button = Button(self._menu_center, text="Играть", width=15, command=self.open_quiz)
         start_button.grid(row=1, column=0, pady=10)
         rules_button = Button(self._menu_center, text="Правила", width=15)
         rules_button.grid(row=2, column=0, pady=10)
@@ -47,16 +46,21 @@ class Game:
         self._menu_center.grid(row=1, column=1)
 
     def __init_quiz(self) -> None:
-        self._quiz = Canvas(self._root,  width=200, height=200, bg='red')
+        # todo отключение меню
+        self._menu_center.grid_forget()
 
-        self._quiz.create_text(210, 10, font=self._leto_text_sans_defect_font_bold_16, text="Сколько стоит ваша дейстие?")
-        # question = Label(self._quiz, text="Сколько стоит ваша дейстие?", width=15, font=self._leto_text_sans_defect_font_bold_16)
-        # question.grid(row=0, column=0, pady=20)
-        # answers = []
-        # for index in range(4):
-        #     answer = Button(self._quiz, text=f"Ответ: {index}", width=15)
-        #     answer.grid(row=index + 2, column=0, pady=10)
-        #     answers.append(answer)
+        self._quiz = Frame(self._root)
+        question = Text(self._quiz, width=17, height=3, wrap='word',
+                        font=self._leto_text_sans_defect_font_bold_16)
+        question.insert("1.0", "Test1 Test2 Test3 Test4 Test5 Test6 Test7 Test Test Test")
+        question.config(state="disabled")
+        question.grid(row=0, column=0)
+
+        answers = []
+        for index in range(4):
+            answer = Button(self._quiz, text=f"Test Test Test Test Test{index}", width=25)
+            answer.grid(row=index + 2, column=0, pady=10)
+            answers.append(answer)
 
         self._quiz.grid(row=1, column=1)
 
@@ -79,7 +83,7 @@ class Game:
 
 def main() -> None:
     window = Game()
-    window.open_quiz()
+    window.open_menu()
     window.mainloop()
 
 

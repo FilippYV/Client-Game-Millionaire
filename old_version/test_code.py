@@ -1,8 +1,8 @@
 import pytest
-from app.interface.interface_code import start_text_to_go_or_end, rand_question
+from old_version.interface.old_version.interface_code import start_text_to_go_or_end, rand_question
 # from app.interface.interface_code import chek_fireproof_amount, funck_fireproof_amount
-from app.interface.interface_code import get_question_with_answers, ErrorFilePresence
-from app.interface.eror_and_right.eror_funck import CommandNotFound, QuestionSerchEror
+from old_version.interface.old_version.interface_code import get_question_with_answers, ErrorFilePresence
+from old_version.eror_funck import CommandNotFound, QuestionSerchEror
 
 
 def test_start_game_wrong_command_noumbers():

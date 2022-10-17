@@ -13,5 +13,8 @@ class QuestionSerchEror(ErorInterface):
 class ErrorFilePresence(ErorInterface):
     pass
 
+class ErorDataInUser(ErorInterface):
+    pass
+
 # class ErrorClountFireproofAmount(ErorInterface):
 #     pass

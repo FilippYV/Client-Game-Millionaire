@@ -2,8 +2,9 @@ import json
 import random
 import time
 import os
-from app.interface.eror_and_right.eror_funck import CommandNotFound, QuestionSerchEror
-from app.interface.eror_and_right.eror_funck import ErrorFilePresence, ErrorFilePresence
+import requests
+from old_version.eror_funck import CommandNotFound, QuestionSerchEror
+from old_version.eror_funck import ErrorFilePresence
 
 
 def changing_the_interface():  # Очистка окна консоли
@@ -31,13 +32,13 @@ def main_menue_selection():  # Функция выбора действия в �
         print("Ошибка ввода")
 
 
-def main_menue_game_out():  # Меню игры вывод
-    cash_text = f"Рады видеть вас в нашей игре: Кто хочет стать милионером?"
-    out_slow(cash_text)
-    cash_text = f"{15 * '-'}\nНачать\n{15 * '-'}\nТоп игроков\n{15 * '-'}\nВыход\n{15 * '-'}"
-    out_slow(cash_text)
-    print(f"Введите 'начать' или 'топ' или 'выход'")
-    print('Командная строка : ', end='')
+# def main_menue_game_out():  # Меню игры вывод
+#     cash_text = f"Рады видеть вас в нашей игре: Кто хочет стать милионером?"
+#     out_slow(cash_text)
+#     cash_text = f"{15 * '-'}\nНачать\n{15 * '-'}\nТоп игроков\n{15 * '-'}\nВыход\n{15 * '-'}"
+#     out_slow(cash_text)
+#     print(f"Введите 'начать' или 'топ' или 'выход'")
+#     print('Командная строка : ', end='')
 
 
 def start_text_to_go_or_end(menue_entering_a_response):  # Меню игры функция выбора
@@ -45,9 +46,9 @@ def start_text_to_go_or_end(menue_entering_a_response):  # Меню игры ф�
         case "начать" | "go" | "start" | "поехали":
             changing_the_interface()
             funck_name_user()
-        case "top" | "топ":
-            changing_the_interface()
-            out_top_players()
+        # case "top" | "топ":
+        #     changing_the_interface()
+        #     out_top_players()
         case "выход" | "exit" | "ex":
             stop_game_out()
             stop_game()
@@ -55,8 +56,8 @@ def start_text_to_go_or_end(menue_entering_a_response):  # Меню игры ф�
             raise CommandNotFound()
 
 
-def out_top_players():  # Вывод топа игроков
-    print("Топ игроков!")
+# def out_top_players():  # Вывод топа игроков
+#     print("Топ игроков!")
 
 
 def out_slow(cash_text):  # Функция посимвольного вывода
@@ -68,6 +69,9 @@ def out_slow(cash_text):  # Функция посимвольного вывод
 
 def entering_a_name():  # Ввод имя игрока
     name_player = str(input())
+
+def server_requests():
+    requests.post('https://httpbin.org/post', data={'key': 'value'})
 
 
 def entering_a_name_out():  # Ввод имя игрока  консольный вывод
@@ -154,11 +158,11 @@ def out_prize(prize):  # Вывод выигрыша
 
 def calculation_prize(cost_blok: str, prize_size_count: int, count: str):
     try:
-        data_cost = get_data_from_json("C:/Users/filip/PycharmProjects/client-game-millionaire/static/question.json")
+        data_cost = get_data_from_json("/static/question.json")
     except ErrorFilePresence:
         print("Ошибка, нет файла с вопросами!!!")
         stop_game()
-    data_cost = get_data_from_json("C:/Users/filip/PycharmProjects/client-game-millionaire/static/question.json")
+    data_cost = get_data_from_json("/static/question.json")
     if cost_blok not in set(data_cost.keys()):
         raise QuestionSerchEror
     prize = data_cost[cost_blok][prize_size_count][count]

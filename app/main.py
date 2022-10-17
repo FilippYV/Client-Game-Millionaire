@@ -1,4 +1,4 @@
-from app.interface.interface_code import funck_code_game, rand_question
+from app.code_program import input_a_name_to_the_server
 
 if __name__ == '__main__':
-    funck_code_game()
+    input_a_name_to_the_server()

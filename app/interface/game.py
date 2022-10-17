@@ -35,6 +35,8 @@ class Game(QMainWindow):
         self.bttn1.setText("Ответ1")
         self.bttn1.setFixedWidth(300)
         self.bttn1.setFixedHeight(40)
+        self.bttn1.clicked.connect(self.dialog_window)
+
 
         self.bttn2 = QtWidgets.QPushButton(self)
         self.bttn2.setObjectName('Button')
@@ -59,7 +61,15 @@ class Game(QMainWindow):
         self.bttn4.setText("Ответ4")
         self.bttn4.setFixedWidth(300)
         self.bttn4.setFixedHeight(40)
+        self.bttn4.clicked.connect(self.window_win)
 
+    def dialog_window(self):
+        self.msgBox = QMessageBox().warning(self, 'Выигрыш', "Хотите забрать свой выигрыш?",
+                                            QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+
+    def window_win(self):
+        self.winbox = QMessageBox().warning(self, 'Победа', "Поздравляем, Вы победили!",
+                                            QMessageBox.StandardButton.Ok)
 
 
 

@@ -5,16 +5,19 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 
-from app.code_program import get_question, user_answer_one, user_answer_two, user_answer_three, user_answer_four
+from app.code_program import get_question, user_answer_one, user_answer_two, user_answer_three, \
+    user_answer_four, stop_game_fail, stop_game_correct, get_data_about_user_user_id
 from app.main import qvestion_funck
 
-id_user_in_game = "ufttfrrnxfgxybwfrdzjlccot"
+id_user_in_game = "kffyukmrstkcvmbolxldxxhby"
 
 
 class Menu(QMainWindow):
     def __init__(self):
         super().__init__()
         self.count = 0
+        self.cost = 0.0
+        # self.bank = get_data_about_user_user_id(id_user_in_game)
         self.setWindowTitle('Кто хочет стать миллионером')
         self.setGeometry(0, 0, 1920, 1080)
         self.setObjectName("MainWindow")
@@ -70,7 +73,16 @@ class Menu(QMainWindow):
         self.question_text.setAlignment(Qt.AlignCenter)
         self.question_text.hide()
 
-        self.csore_user = QtWidgets.QLabel("Деньги:", self)
+        self.csore_user_menue = QtWidgets.QLabel((f'Всего денег {get_data_about_user_user_id(id_user_in_game)}'),
+                                                 self)
+        self.csore_user_menue.move(500, 500)
+        self.csore_user_menue.setFont(QFont('Times New Roman', 14))
+        self.csore_user_menue.setGeometry(0, 0, 1920, 30)
+        self.csore_user_menue.setAlignment(Qt.AlignLeft)
+        self.csore_user_menue.show()
+
+
+        self.csore_user = QtWidgets.QLabel((f'Всего денег {self.count}'), self)
         self.csore_user.move(500, 500)
         self.csore_user.setFont(QFont('Times New Roman', 14))
         self.csore_user.setGeometry(0, 0, 1920, 30)
@@ -162,7 +174,6 @@ class Menu(QMainWindow):
         self.bttn3.clicked.connect(self.out_otvet_3)
         self.bttn4.clicked.connect(self.out_otvet_4)
 
-
         self.bttn_go = QtWidgets.QPushButton(self)
         self.bttn_go.setObjectName('Button')
         self.bttn_go.move(1600, 950)
@@ -191,6 +202,11 @@ class Menu(QMainWindow):
         self.button_pass.hide()
 
     def main_menue(self):
+        self.csore_user.hide()
+        self.count = 0
+        self.cost = 0
+        self.csore_user_menue.setText(f'Денег всего: {get_data_about_user_user_id(id_user_in_game)}')
+        self.csore_user_menue.show()
         self.main_text.setText("Кто хочет стать миллионером?")
         self.textEdit.hide()
         self.question_text.hide()
@@ -204,11 +220,11 @@ class Menu(QMainWindow):
         self.btn_exit.show()
         self.btn_rules.show()
         self.main_text.show()
-
         self.textEdit.hide()
         self.btn1.hide()
 
     def game_menue_x(self):
+        self.csore_user_menue.hide()
         self.bttn_go.hide()
         self.button_on()
         self.setWindowTitle('Игра')
@@ -222,29 +238,45 @@ class Menu(QMainWindow):
         self.bttn3.setStyleSheet('')
         self.bttn4.setStyleSheet('')
 
-        mass = get_question(id_user_in_game, self.count)
-        self.question_text.setText(mass[1][0])
+        self.mass = get_question(id_user_in_game, self.count)
+        self.question_text.setText(self.mass[1][0])
         self.question_text.show()
-        self.bttn1.setText(mass[5][0])
+        self.bttn1.setText(self.mass[2][0])
         self.bttn1.show()
-        self.bttn2.setText(mass[4][0])
+        self.bttn2.setText(self.mass[3][0])
         self.bttn2.show()
-        self.bttn3.setText(mass[3][0])
+        self.bttn3.setText(self.mass[4][0])
         self.bttn3.show()
-        self.bttn4.setText(mass[2][0])
+        self.bttn4.setText(self.mass[5][0])
         self.bttn4.show()
         self.btn1.show()
         self.main_text.setText(f"Вопрос №{self.count + 1}")
+        self.csore_user.setText(f'Выигрыш: {self.cost}')
         self.csore_user.show()
 
     def game_menue(self):
-        if self.count == 1:
+        if self.count == 0:
+            stop_game_fail(id_user_in_game)
+        if self.count == 3:
             self.dialog_window()
-        self.game_menue_x()
+        elif self.count == 6:
+            self.dialog_window()
+        elif self.count == 9:
+            self.dialog_window()
+        elif self.count == 12:
+            self.dialog_window()
+        elif self.count == 15:
+            self.stop_game_count()
+        else:
+            self.game_menue_x()
 
+    def cost_calculation(self):
+        self.cost += float(self.mass[-1][0])
 
     def out_otvet_1(self):
         if user_answer_one(id_user_in_game, self.count - 1) == True:
+            self.cost_calculation()
+            self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn1.setText("Правильный ответ")
             self.bttn1.setStyleSheet('#Button{background-color:lightgreen}')
@@ -256,10 +288,13 @@ class Menu(QMainWindow):
             self.btn1.show()
             self.question_text.setText("Вы проиграли!")
             self.button_off()
-
+            self.bank = get_data_about_user_user_id(id_user_in_game)
+            stop_game_fail(id_user_in_game)
 
     def out_otvet_2(self):
         if user_answer_two(id_user_in_game, self.count - 1) == True:
+            self.cost_calculation()
+            self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn2.setText("Правильный ответ")
             self.bttn2.setStyleSheet('#Button{background-color:lightgreen}')
@@ -272,9 +307,13 @@ class Menu(QMainWindow):
             self.btn1.show()
             self.question_text.setText("Вы проиграли!")
             self.button_off()
+            self.bank = get_data_about_user_user_id(id_user_in_game)
+            stop_game_fail(id_user_in_game)
 
     def out_otvet_3(self):
         if user_answer_three(id_user_in_game, self.count - 1) == True:
+            self.cost_calculation()
+            self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn3.setText("Правильный ответ")
             self.bttn3.setStyleSheet('#Button{background-color:lightgreen}')
@@ -287,9 +326,13 @@ class Menu(QMainWindow):
             self.btn1.show()
             self.question_text.setText("Вы проиграли!")
             self.button_off()
+            self.bank = get_data_about_user_user_id(id_user_in_game)
+            stop_game_fail(id_user_in_game)
 
     def out_otvet_4(self):
         if user_answer_four(id_user_in_game, self.count - 1) == True:
+            self.cost_calculation()
+            self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn4.setText("Правильный ответ")
             self.bttn4.setStyleSheet('#Button{background-color:lightgreen}')
@@ -302,10 +345,11 @@ class Menu(QMainWindow):
             self.btn1.show()
             self.question_text.setText("Вы проиграли!")
             self.button_off()
-
-
+            self.bank = get_data_about_user_user_id(id_user_in_game)
+            stop_game_fail(id_user_in_game)
 
     def game_rules(self):
+        self.csore_user_menue.hide()
         self.setWindowTitle('Правила')
         self.main_text.hide()
         self.btn_start.hide()
@@ -319,7 +363,6 @@ class Menu(QMainWindow):
         self.count += 1
 
     def count_reset(self):
-        self.count = 0
         self.main_menue()
 
     def exit_in_main_menue(self):
@@ -335,8 +378,6 @@ class Menu(QMainWindow):
         self.btn1.hide()
         self.btn_exit.show()
 
-
-
     def button_off(self):
         self.bttn1.setEnabled(False)
         self.bttn2.setEnabled(False)
@@ -349,49 +390,37 @@ class Menu(QMainWindow):
         self.bttn3.setEnabled(True)
         self.bttn4.setEnabled(True)
 
-    # def count_take(self):
-    #     x = 0
-    #     if self.count == 1:
-    #         self.button_take.show()
-    #         self.button_pass.show()
-    #         self.question_text.show()
-    #         self.question_text.setText("Хотите забрать выигрыш?")
+    def dialog_window(self):
+        self.fork = QMessageBox()
+        self.fork.setText("Хотите забрать выигрыш?")
+        self.fork.setStandardButtons(QMessageBox.Save | QMessageBox.Ignore)
+        self.fork.buttonClicked.connect(self.fork_panck)
+        self.fork.exec_()
 
-    # def dialog_window(self):
-    #     # self.msgBox = QMessageBox().Question(self, 'Выигрыш', "Хотите забрать свой выигрыш?",
-    #     #                                     QMessageBox.Yes  | QMessageBox.No)
-    #     # print(self.msgBox)
-    #
-    #     fork = QMessageBox()
-    #     fork.setText("Хотите забрать выигрыш?")
-    #     fork.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-    #     fork.exec()
-
-
-
-
-        # self.msgBox = QtWidgets.QDialog()
-        # self.msgBox.setWindowTitle('Развилка')
-        # self.msgBox.setGeometry(0, 0, 600, 600)
-        # self.msgBox.button_ok = QtWidgets.QPushButton(self)
-        # self.msgBox.button_ok.setObjectName('Button')
-        # self.msgBox.button_ok.setText("Продолжить")
-        # self.msgBox.button_ok.setFixedWidth(300)
-        # self.msgBox.button_ok.setFixedHeight(40)
-        # # self.button_pass.clicked.connect(self.game_menue)
-        # self.button_pass.show()
-        self.x = int(input())
-
-        # tson(self, 'Выигрыш', "Хотите забрать свой выигрыш?",
-        #      QMessageBox.Yes | QMessageBox.No)
-
+    def fork_panck(self, btn):
+        if btn.text() == "Save":
+            self.stop_game_count()
+        elif btn.text() == "Ignore":
+            self.game_menue_x()
 
     # Функция выхода на рабочий стол
     def close_window(self):
         sys.exit(app.exec_())
 
-def sys_p():
-    time.sleep(2)
+    def stop_game_count(self):
+        self.main_text.setText("Кто хочет стать миллионером?")
+        self.textEdit.hide()
+        self.bttn1.hide()
+        self.bttn2.hide()
+        self.bttn3.hide()
+        self.bttn4.hide()
+        self.bttn_go.hide()
+        self.question_text.show()
+        stop_game_correct(id_user_in_game)
+        self.question_text.setText(f"Поздравляем вы виграли!!!\n\n\nВаш выигрыш составил - {self.cost}")
+        self.btn1.show()
+        self.csore_user_menue.hide()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

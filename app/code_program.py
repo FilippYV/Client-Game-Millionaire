@@ -1,16 +1,12 @@
 import json
 import requests
 
-from app.erors_funck import FailUserName, FailServerEror, ErrorInput
-from app.interface.game import Game
+from app.erors_funck import FailUserName, FailServerEror
 
 url_server = "https://server-game-millionaire.herokuapp.com"
-
 filename = '../static/user.json'
 
 
-#
-#
 def recording_users_in_json(new_data):
     '''
     записываем пользователей в json
@@ -22,38 +18,36 @@ def recording_users_in_json(new_data):
             json.dump(data, f, ensure_ascii=False, indent=3)
 
 
-#
-#
-# def read_json():
-#     '''
-#     читам json файл с пользователями
-#     '''
-#     with open(filename, 'r', encoding='utf-8') as file:
-#         return json.load(file)
-#
-#
-# def name_verification(name):
-#     '''
-#     проверка на наличие хеша
-#     '''
-#     if len(name) < 1:
-#         raise FailUserName()
-#     hash_user = None
-#     cach = read_json()
-#     for i in range(len(cach["list"])):
-#         if name == cach["list"][i]["name_user"]:
-#             hash_user = cach["list"][i]["user_id"]
-#             break
-#     try:
-#         if hash_user is not None:
-#             id_user_in_game = get_data_about_user_user_id(hash_user)
-#         else:
-#             id_user_in_game = get_data_about_user_regist(name)
-#         return id_user_in_game
-#     except FailServerEror:
-#         print("Eror server!!!")
-#
-#
+def read_json():
+    '''
+    читам json файл с пользователями
+    '''
+    with open(filename, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+
+def name_verification(name):
+    '''
+    проверка на наличие хеша
+    '''
+    if len(name) < 1:
+        raise FailUserName()
+    hash_user = None
+    cach = read_json()
+    for i in range(len(cach["list"])):
+        if name == cach["list"][i]["name_user"]:
+            hash_user = cach["list"][i]["user_id"]
+            break
+    try:
+        if hash_user is not None:
+            id_user_in_game = get_data_about_user_user_id(hash_user)
+        else:
+            id_user_in_game = get_data_about_user_regist(name)
+        return id_user_in_game
+    except FailServerEror:
+        print("Eror server!!!")
+
+
 def get_data_about_user_user_id(hash_user):
     '''
     вход при помощи user id
@@ -86,20 +80,6 @@ def get_data_about_user_regist(name_user):
         raise FailServerEror()
 
 
-#
-#
-# def input_a_name_to_the_server():
-#     '''
-#     функция ...
-#     '''
-#     name_user = str(input('Введите имя - '))
-#     # name_verification(name_user)
-#     id_user_in_game = name_verification(name_user)
-#     count_question = 1
-#     for i in range(15):
-#         get_question(id_user_in_game, count_question)
-
-
 def input_a_name_to_the_server_main(id_user_in_game):
     '''
     функция ...
@@ -122,6 +102,7 @@ def check_answer_user(id_user_in_game, user_answer, count_question):
             return False
 
 
+# todo надо сделать срочно!!!
 # def exclude_two_answers(id_user_in_game, user_answer, count_question):
 #     command = "exclude_two_answers"
 #     get_user = requests.post(f"{url_server}/{command}", data=json.dumps({"user_id": id_user_in_game}))
@@ -177,17 +158,6 @@ def stop_game_correct(id_user_in_game):
         return data
 
 
-# def user_answer_to(id_user_in_game, count_question):
-#     user_answer = int(input("Выбор: "))
-#     match user_answer:
-#         case 1 | 2 | 3 | 4:
-#             check_answer_user(id_user_in_game, user_answer - 1, count_question)
-#         case -1:
-#             exclude_two_answers(id_user_in_game, user_answer, count_question)
-#         case _:
-#             raise ErrorInput()
-
-
 def user_answer_one(id_user_in_game, count_question):
     user_answer = 0
     x = check_answer_user(id_user_in_game, user_answer, count_question)
@@ -215,7 +185,6 @@ def user_answer_four(id_user_in_game, count_question):
 def cost_user(id_user_in_game):
     command = "get_data_about_user"
     get_user = requests.post(f"{url_server}/{command}", data=json.dumps({"user_id": id_user_in_game}))
-    print(get_user)
 
 
 def choosing_an_action(id_user_in_game):

@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from qtpy import QtGui
 
 from app.code_program import get_question, user_answer_one, user_answer_two, user_answer_three, \
     user_answer_four, stop_game_fail, stop_game_correct, get_data_about_user_user_id
@@ -19,7 +20,7 @@ class Menu(QMainWindow):
         self.setWindowTitle('Кто хочет стать миллионером')
         self.setGeometry(0, 0, 1920, 1080)
         self.setObjectName("MainWindow")
-        self.setStyleSheet("#MainWindow{border-image:url(background_menu.jpg)}")
+        self.setWindowIcon(QtGui.QIcon('../static/ico.ico'))
 
         # Вывод основного приветствия
         self.main_text = QtWidgets.QLabel("Кто хочет стать миллионером?", self)
@@ -253,7 +254,7 @@ class Menu(QMainWindow):
     def game_menue(self):
         if self.count == 0:
             stop_game_fail(id_user_in_game)
-        if self.count == 1:
+        if self.count == 3:
             self.dialog_window()
         elif self.count == 6:
             self.dialog_window()
@@ -267,9 +268,7 @@ class Menu(QMainWindow):
             self.game_menue_x()
 
     def cost_calculation(self):
-        print('2')
         self.cost += float(self.mass[-1])
-        print('3')
 
     def out_otvet_1(self):
         if user_answer_one(id_user_in_game, self.count - 1) == True:
@@ -329,7 +328,6 @@ class Menu(QMainWindow):
             self.bttn4.setStyleSheet('#Button{background-color:lightgreen}')
             self.bttn_go.show()
             self.button_off()
-            print('11')
         else:
             self.bttn4.setStyleSheet("background-color : red")
             self.btn1.show()
@@ -380,9 +378,13 @@ class Menu(QMainWindow):
 
     def dialog_window(self):
         self.fork = QMessageBox()
+        self.fork.setWindowTitle('Направо подешь...')
         self.fork.setText("Хотите забрать выигрыш?")
+        self.fork.setInformativeText("Если хотите забрать деньги нажмите 'Save'\n"
+                                     " Если хотите продолжить нажмите 'Ignore'")
         self.fork.setStandardButtons(QMessageBox.Save | QMessageBox.Ignore)
         self.fork.buttonClicked.connect(self.fork_panck)
+        self.fork.setWindowIcon(QtGui.QIcon('../static/ico.ico'))
         self.fork.exec_()
 
     def fork_panck(self, btn):

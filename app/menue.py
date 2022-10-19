@@ -1,5 +1,4 @@
 import sys
-import time
 from PyQt5 import QtWidgets
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
@@ -7,7 +6,6 @@ from PyQt5.QtCore import *
 
 from app.code_program import get_question, user_answer_one, user_answer_two, user_answer_three, \
     user_answer_four, stop_game_fail, stop_game_correct, get_data_about_user_user_id
-from app.main import qvestion_funck
 
 id_user_in_game = "kffyukmrstkcvmbolxldxxhby"
 
@@ -80,7 +78,6 @@ class Menu(QMainWindow):
         self.csore_user_menue.setGeometry(0, 0, 1920, 30)
         self.csore_user_menue.setAlignment(Qt.AlignLeft)
         self.csore_user_menue.show()
-
 
         self.csore_user = QtWidgets.QLabel((f'Всего денег {self.count}'), self)
         self.csore_user.move(500, 500)
@@ -224,6 +221,7 @@ class Menu(QMainWindow):
         self.btn1.hide()
 
     def game_menue_x(self):
+        self.mass = get_question(id_user_in_game, self.count)
         self.csore_user_menue.hide()
         self.bttn_go.hide()
         self.button_on()
@@ -238,7 +236,6 @@ class Menu(QMainWindow):
         self.bttn3.setStyleSheet('')
         self.bttn4.setStyleSheet('')
 
-        self.mass = get_question(id_user_in_game, self.count)
         self.question_text.setText(self.mass[1][0])
         self.question_text.show()
         self.bttn1.setText(self.mass[2][0])
@@ -251,13 +248,12 @@ class Menu(QMainWindow):
         self.bttn4.show()
         self.btn1.show()
         self.main_text.setText(f"Вопрос №{self.count + 1}")
-        self.csore_user.setText(f'Выигрыш: {self.cost}')
         self.csore_user.show()
 
     def game_menue(self):
         if self.count == 0:
             stop_game_fail(id_user_in_game)
-        if self.count == 3:
+        if self.count == 1:
             self.dialog_window()
         elif self.count == 6:
             self.dialog_window()
@@ -271,81 +267,73 @@ class Menu(QMainWindow):
             self.game_menue_x()
 
     def cost_calculation(self):
-        self.cost += float(self.mass[-1][0])
+        print('2')
+        self.cost += float(self.mass[-1])
+        print('3')
 
     def out_otvet_1(self):
         if user_answer_one(id_user_in_game, self.count - 1) == True:
+            self.count_question()
             self.cost_calculation()
             self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn1.setText("Правильный ответ")
             self.bttn1.setStyleSheet('#Button{background-color:lightgreen}')
-            self.count_question()
             self.bttn_go.show()
             self.button_off()
         else:
             self.bttn1.setStyleSheet("background-color : red")
             self.btn1.show()
-            self.question_text.setText("Вы проиграли!")
             self.button_off()
-            self.bank = get_data_about_user_user_id(id_user_in_game)
             stop_game_fail(id_user_in_game)
 
     def out_otvet_2(self):
         if user_answer_two(id_user_in_game, self.count - 1) == True:
+            self.count_question()
             self.cost_calculation()
             self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn2.setText("Правильный ответ")
             self.bttn2.setStyleSheet('#Button{background-color:lightgreen}')
-            self.count_question()
             self.bttn_go.show()
             self.button_off()
-
         else:
             self.bttn2.setStyleSheet("background-color : red")
             self.btn1.show()
-            self.question_text.setText("Вы проиграли!")
             self.button_off()
-            self.bank = get_data_about_user_user_id(id_user_in_game)
             stop_game_fail(id_user_in_game)
 
     def out_otvet_3(self):
         if user_answer_three(id_user_in_game, self.count - 1) == True:
+            self.count_question()
             self.cost_calculation()
             self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn3.setText("Правильный ответ")
             self.bttn3.setStyleSheet('#Button{background-color:lightgreen}')
-            self.count_question()
             self.bttn_go.show()
             self.button_off()
-
         else:
             self.bttn3.setStyleSheet("background-color : red")
             self.btn1.show()
-            self.question_text.setText("Вы проиграли!")
             self.button_off()
-            self.bank = get_data_about_user_user_id(id_user_in_game)
             stop_game_fail(id_user_in_game)
 
     def out_otvet_4(self):
         if user_answer_four(id_user_in_game, self.count - 1) == True:
+            self.count_question()
             self.cost_calculation()
             self.csore_user.setText(f'Выигрыш: {self.cost}')
             self.btn1.show()
             self.bttn4.setText("Правильный ответ")
             self.bttn4.setStyleSheet('#Button{background-color:lightgreen}')
-            self.count_question()
             self.bttn_go.show()
             self.button_off()
-
+            print('11')
         else:
             self.bttn4.setStyleSheet("background-color : red")
             self.btn1.show()
-            self.question_text.setText("Вы проиграли!")
             self.button_off()
-            self.bank = get_data_about_user_user_id(id_user_in_game)
             stop_game_fail(id_user_in_game)
 
     def game_rules(self):

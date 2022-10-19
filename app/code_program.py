@@ -6,8 +6,9 @@ from app.interface.game import Game
 
 url_server = "https://server-game-millionaire.herokuapp.com"
 
-
 filename = '../static/user.json'
+
+
 #
 #
 def recording_users_in_json(new_data):
@@ -19,6 +20,8 @@ def recording_users_in_json(new_data):
         data["list"].append(new_data)
         with open(filename, "w", encoding='utf-8') as f:
             json.dump(data, f, ensure_ascii=False, indent=3)
+
+
 #
 #
 # def read_json():
@@ -63,6 +66,8 @@ def get_data_about_user_user_id(hash_user):
     else:
         print("Eror server!!!")
         raise FailServerEror()
+
+
 #
 #
 def get_data_about_user_regist(name_user):
@@ -79,6 +84,8 @@ def get_data_about_user_regist(name_user):
     else:
         print("Eror server!!!")
         raise FailServerEror()
+
+
 #
 #
 # def input_a_name_to_the_server():
@@ -109,8 +116,10 @@ def check_answer_user(id_user_in_game, user_answer, count_question):
                                                                          "answer_id": user_answer}))
     if get_user.ok:
         data = get_user.json()
-        print(data)
-        return data["answer"]["correct_answer"]
+        if data["answer"]["correct_answer"] == True:
+            return True
+        else:
+            return False
 
 
 # def exclude_two_answers(id_user_in_game, user_answer, count_question):
@@ -128,7 +137,6 @@ def check_answer_user(id_user_in_game, user_answer, count_question):
 #         except ErrorInput:
 #             print("Error input!!!")
 #             exit(1)
-
 
 
 def get_question(id_user_in_game, count_question):
@@ -149,6 +157,7 @@ def get_question(id_user_in_game, count_question):
                 mass.append([f"Ответ №4: {data['answer']['answers'][i]['text']}"])
         mass.append(float(data['answer']['cost']))
         return mass
+
 
 def stop_game_fail(id_user_in_game):
     command = "finish_game"
@@ -180,23 +189,26 @@ def stop_game_correct(id_user_in_game):
 
 
 def user_answer_one(id_user_in_game, count_question):
-    user_answer = 1
-    x = check_answer_user(id_user_in_game, user_answer - 1, count_question)
+    user_answer = 0
+    x = check_answer_user(id_user_in_game, user_answer, count_question)
     return x
+
 
 def user_answer_two(id_user_in_game, count_question):
-    user_answer = 2
-    x = check_answer_user(id_user_in_game, user_answer - 1, count_question)
+    user_answer = 1
+    x = check_answer_user(id_user_in_game, user_answer, count_question)
     return x
+
 
 def user_answer_three(id_user_in_game, count_question):
-    user_answer = 3
-    x = check_answer_user(id_user_in_game, user_answer - 1, count_question)
+    user_answer = 2
+    x = check_answer_user(id_user_in_game, user_answer, count_question)
     return x
 
+
 def user_answer_four(id_user_in_game, count_question):
-    user_answer = 4
-    x = check_answer_user(id_user_in_game, user_answer - 1, count_question)
+    user_answer = 3
+    x = check_answer_user(id_user_in_game, user_answer, count_question)
     return x
 
 
@@ -214,40 +226,8 @@ def choosing_an_action(id_user_in_game):
         return data["answer"]["money"]
 
 
-
 def showing_questions():
     # вывод вопросов в интерфейс
-    pass
-
-
-def sending_a_response_to_the_server():
-    # при нажатии на кнопки интерфейса
-    pass
-
-
-def server_error_handling():
-    # обработка ошибок сервера
-    pass
-
-
-def show_start_menu_game():
-    '''
-    показываем все элементы интерфейса которые нужны в главном меню
-    '''
-    pass
-
-
-def show_entering_the_user_name():
-    '''
-    показываем все элементы интерфейса которые нужны при вводе имени
-    '''
-    pass
-
-
-def show_question():
-    '''
-    показываем вопрос и варианты ответа и копку подсказок подсказки
-    '''
     pass
 
 
@@ -255,9 +235,5 @@ def entering_the_user_name():
     '''
     при входе в игру вводим имя игрока
     '''
-    #  надпись которая должна быть поверх строчки ввода имени
-    # (строчка ввода имени, пока её нет будет ввод в переменную)
     user_name_stroka = str(input())
-    # после нажатия на кнопку отправки
-    # переход на начало игры, а именно первый вопрос ->
     showing_questions()
